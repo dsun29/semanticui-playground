@@ -1,0 +1,28 @@
+{
+  "name": "reactclient",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "history": "^4.6.3",
+    "react": "^15.6.1",
+    "react-async-script": "^0.9.1",
+    "react-dom": "^15.6.1",
+    "react-google-recaptcha": "^0.9.6",
+    "react-recaptcha": "^2.3.2",
+    "react-redux": "^5.0.5",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1",
+    "react-router-redux": "^5.0.0-alpha.6",
+    "react-scripts": "1.0.10",
+    "redux": "^3.7.1",
+    "redux-thunk": "^2.2.0",
+    "reqwest": "^2.0.5",
+    "semantic-ui-react": "^0.71.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
