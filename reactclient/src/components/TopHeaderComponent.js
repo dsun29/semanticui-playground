@@ -20,13 +20,13 @@ export default class TopHeaderComponent extends Component {
                 <Segment vertical inverted>
                     <Grid>
                     <Container>
-                        <Menu inverted pointing>
+                        <Menu inverted pointing stackable>
                             <Menu.Item header position="left">
 
                                 <Header as='h2' inverted>
                                     <Icon name='student'/>
                                     <Header.Content>
-                                        FullStackRebel
+                                        UMMC
                                     </Header.Content>
                                 </Header>
                             </Menu.Item>
