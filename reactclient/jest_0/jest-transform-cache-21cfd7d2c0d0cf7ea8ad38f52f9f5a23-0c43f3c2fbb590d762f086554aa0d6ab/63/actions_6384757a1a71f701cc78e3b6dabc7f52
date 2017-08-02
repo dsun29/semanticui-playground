@@ -1,0 +1,55 @@
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.Register_Fail_Action = exports.Register_Succeed_Action = exports.Register_Action = exports.Close_Spinner = exports.Open_Spinner = undefined;var _reqwest = require('reqwest');var _reqwest2 = _interopRequireDefault(_reqwest);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+/*********************************************************************************/
+const Open_Spinner = exports.Open_Spinner = () => {
+    return {
+        type: 'OPEN_SPINNER' };
+
+};
+
+const Close_Spinner = exports.Close_Spinner = () => {
+
+    return {
+        type: 'CLOSE_SPINNER' };
+
+};
+
+
+/*********************************************************************************/
+
+const Register_Action = exports.Register_Action = (email, password, recaptchaResponse) => {
+
+    return function (dispatch) {
+        dispatch(Open_Spinner());
+        return (0, _reqwest2.default)({
+            url: 'http://localhost:8090/user/registration',
+            method: 'post',
+            type: 'json',
+            crossOrigin: true,
+            withCredentials: false,
+            data: { email: email, password: password, recaptchaResponse: recaptchaResponse } }).
+        then(function (resp) {
+            dispatch(Register_Succeed_Action(resp));
+
+        }).
+        fail(function (err, msg) {
+            dispatch(Register_Fail_Action(msg));
+        }).
+        always(function (resp) {
+            dispatch(Close_Spinner());
+        });
+    };
+};
+
+const Register_Succeed_Action = exports.Register_Succeed_Action = response => {
+    return {
+        type: 'Register_Succeed' };
+
+};
+
+const Register_Fail_Action = exports.Register_Fail_Action = message => {
+    return {
+        type: 'Register_Fail',
+        message: message };
+
+};

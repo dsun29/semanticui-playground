@@ -1,0 +1,56 @@
+'use strict';
+var _nock = require('nock');var _nock2 = _interopRequireDefault(_nock);
+var _reduxMockStore = require('redux-mock-store');var _reduxMockStore2 = _interopRequireDefault(_reduxMockStore);
+var _reduxThunk = require('redux-thunk');var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
+var _actions = require('../../redux/actions');var actions = _interopRequireWildcard(_actions);function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+
+describe('actions', () => {
+    it('should return OPEN_SPINNER action type', () => {
+
+        const expectedAction = {
+            type: 'OPEN_SPINNER' };
+
+        expect(actions.Open_Spinner()).toEqual(expectedAction);
+    });
+
+    it('should return CLOSE_SPINNER action type', () => {
+
+        const expectedAction = {
+            type: 'CLOSE_SPINNER' };
+
+        expect(actions.Close_Spinner()).toEqual(expectedAction);
+    });
+
+});
+
+const middlewares = [_reduxThunk2.default];
+const mockStore = (0, _reduxMockStore2.default)(middlewares);
+
+describe('async actions', () => {
+    afterEach(() => {
+        _nock2.default.cleanAll();
+    });
+
+    it('register-successfully when Register_Action has been done', () => {
+        (0, _nock2.default)('http://localhost:8090').
+        post('/user/registration', {
+            email: 'sundavy@gmail.com',
+            password: 'bacde' }).
+
+        reply(201, {});
+
+        const expectedActions = [
+        { type: 'Register_Succeed' },
+        { type: 'Register_Succeed', body: {} }];
+
+
+        const store = mockStore({});
+
+        return store.dispatch(actions.Register_Action('sundavy@gmail.com', 'abcee', null)).then(() => {
+
+            expect(store.getActions()).toEqual(expectedActions);
+        });
+    });
+});

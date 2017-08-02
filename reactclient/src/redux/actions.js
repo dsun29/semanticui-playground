@@ -1,4 +1,5 @@
 import reqwest from 'reqwest'
+import fetch from 'isomorphic-fetch'
 
 /*********************************************************************************/
 export const Open_Spinner = () => {
@@ -14,58 +15,83 @@ export const Close_Spinner = () => {
     }
 }
 
-//type: one of: ["success", "warning", "danger", "info", "default", "primary"]
-export const Open_MessageBox = (type, title, message) => {
-    return {
-        type: 'OPEN_MESSAGEBOX',
-        messageBoxType: type,
-        messageBoxTitle: title,
-        messageBoxMessage: message
-    }
-}
-
-export const Close_MessageBox = (followUpAction) => {
-
-    return {
-        type: 'CLOSE_MESSAGEBOX',
-        messageBoxFollowUp: followUpAction
-    }
-}
 
 /*********************************************************************************/
 
 export const Register_Action = (email, password, recaptchaResponse) => {
 
 
+
+
     return function (dispatch) {
         dispatch(Open_Spinner());
-        return reqwest({
+
+        return fetch('http://localhost:8090/user/registration', {
+            method: 'POST',
+            body: {email: email, password: password}
+        })
+            .then(res => {
+                console.log(res.json());
+
+                if(res.status >= 400) {
+                    throw new Error(res);
+                }
+
+                return res.json()
+
+            })
+            .then(json => dispatch(Register_Succeed_Action()))
+            .then(json => dispatch(Close_Spinner()))
+            .catch(ex => dispatch(Register_Fail_Action(ex)));
+
+
+        /* return reqwest({
             url: 'http://localhost:8090/user/registration',
-            method: 'get',
+            method: 'post',
             type: 'json',
             crossOrigin: true,
             withCredentials: false,
-            error: function (err) {
-                dispatch(Open_MessageBox('danger', 'Unexpected Error', '<h3>' + err.status + '-' + err.statusText + '</h3>' + err.responseText));
-                console.log('error in Register_Action,', err);
+            data: {email: email, password: password, recaptchaResponse: recaptchaResponse},
+            success:function(resp){
+                conslog.log(resp);
+                dispatch(Register_Succeed_Action(resp));
+
             },
+            error: function (err) { console.log(err) },
+            complete: function(resp){
 
-            success: function (response) {
-                console.log('successfully Register_Action, ', response);
-
-                dispatch(Close_Spinner());
-                dispatch(Register_Succeed_Action(response));
             }
 
+
         })
+
+            .then(function(resp){
+                conslog.log(resp);
+                dispatch(Register_Succeed_Action(resp));
+
+            })
+            .fail(function(err, msg){
+                conslog.log(err, msg);
+                dispatch(Register_Fail_Action(msg));
+
+            })
+            .always(function(resp){
+                //dispatch(Close_Spinner());
+            });
+            */
     }
 }
 
-export const Register_Succeed_Action = (response) => {
+export const Register_Succeed_Action = () => {
     return {
-        type: 'Register_Succeed',
-        EV_AGREEMENT_TEXTS: response.EV_AGREEMENT_TEXTS,
-        EV_FERPA_RIGHTS_TEXTS: response.EV_FERPA_RIGHTS_TEXTS,
-        EV_FERPA_DIRECTORY_TEXTS: response.EV_FERPA_DIRECTORY_TEXTS
+        type: 'Register_Succeed'
+    }
+}
+
+export const Register_Fail_Action = (message) => {
+    console.log(message);
+    return {
+        type: 'Register_Fail',
+        message: message
     }
 }
