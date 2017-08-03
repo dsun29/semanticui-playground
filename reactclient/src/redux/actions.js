@@ -55,35 +55,6 @@ export const Register_Action = (email, password, recaptchaResponse) => {
             .catch(ex => dispatch(Register_Fail_Action(ex)));
 
 
-
-/*
-         return reqwest({
-            url: 'http://localhost:8090/user/registration',
-            method: 'post',
-            type: 'json',
-            crossOrigin: true,
-            withCredentials: false,
-            data: {email: email, password: password, recaptchaResponse: recaptchaResponse}
-
-
-        })
-
-            .then(function(resp){
-                conslog.log(resp);
-                dispatch(Register_Succeed_Action());
-
-            })
-            .fail(function(err, msg){
-                conslog.log(err, msg);
-                dispatch(Register_Fail_Action(msg));
-
-            })
-            .always(function(resp){
-                //dispatch(Close_Spinner());
-            });
- */
-
-
     }
 }
 

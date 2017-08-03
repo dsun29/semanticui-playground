@@ -12,21 +12,6 @@ function Reducer(state = {}, action)  {
 
             return Object.assign({}, state, { showSpinner: false });
 
-        case 'OPEN_MESSAGEBOX':
-            return  Object.assign({}, state, {
-                messageBoxType: action.messageBoxType,
-                messageBoxTitle: action.messageBoxTitle,
-                messageBoxMessage: action.messageBoxMessage,
-                showMessageBox: true
-
-            });
-
-        case 'CLOSE_MESSAGEBOX':
-            return  Object.assign({}, state, {
-                messageBoxFollowUp: action.messageBoxFollowUp,
-                showMessageBox: false
-
-            });
 
         case 'Register_Succeed':
 
@@ -41,7 +26,6 @@ function Reducer(state = {}, action)  {
                 message: action.message
 
             });
-
 
 
         default:

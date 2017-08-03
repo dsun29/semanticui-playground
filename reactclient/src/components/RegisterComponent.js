@@ -105,7 +105,6 @@ export default class RegisterComponent extends Component {
                                         />
                                         {
                                             this.state.password2ErrorMsg ? (<Label basic color='red' pointing>{this.state.password2ErrorMsg}</Label>) : null
-
                                         }
 
                                     </Form.Field>

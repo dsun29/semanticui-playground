@@ -4,13 +4,13 @@ import './App.css';
 import { Container, Grid } from 'semantic-ui-react'
 import TopHeaderComponent from './components/TopHeaderComponent'
 import MainMenuComponent from './components/MainMenuComponent'
-import RegisterComponent from './components/RegisterComponent'
+import LoginComponent from './components/LoginComponent'
 
 class App extends Component {
   render() {
     return (
 
-            <RegisterComponent/>
+            <LoginComponent/>
 
 
     );
