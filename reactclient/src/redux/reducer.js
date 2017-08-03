@@ -31,9 +31,14 @@ function Reducer(state = {}, action)  {
         case 'Register_Succeed':
 
             return  Object.assign({}, state, {
-                EV_AGREEMENT_TEXTS: action.EV_AGREEMENT_TEXTS,
-                EV_FERPA_RIGHTS_TEXTS: action.EV_FERPA_RIGHTS_TEXTS,
-                EV_FERPA_DIRECTORY_TEXTS: action.EV_FERPA_DIRECTORY_TEXTS
+
+
+            });
+
+        case 'Register_Fail':
+
+            return  Object.assign({}, state, {
+                message: action.message
 
             });
 

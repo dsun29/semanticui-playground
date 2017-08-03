@@ -31,43 +31,46 @@ export const Register_Action = (email, password, recaptchaResponse) => {
             body: {email: email, password: password}
         })
             .then(res => {
-                console.log(res.json());
+                dispatch(Close_Spinner());
+                return res;
+            })
+            .then(res => {
 
-                if(res.status >= 400) {
-                    throw new Error(res);
+                if (res.status >= 400) {
+                    return res.json()
+                        .then(function(err) {
+                            throw new Error(err.message);
+                        });
+                }
+                else{
+                    return res.json()
                 }
 
-                return res.json()
+            })
+            .then(json => {
+
+                dispatch(Register_Succeed_Action());
 
             })
-            .then(json => dispatch(Register_Succeed_Action()))
-            .then(json => dispatch(Close_Spinner()))
             .catch(ex => dispatch(Register_Fail_Action(ex)));
 
 
-        /* return reqwest({
+
+/*
+         return reqwest({
             url: 'http://localhost:8090/user/registration',
             method: 'post',
             type: 'json',
             crossOrigin: true,
             withCredentials: false,
-            data: {email: email, password: password, recaptchaResponse: recaptchaResponse},
-            success:function(resp){
-                conslog.log(resp);
-                dispatch(Register_Succeed_Action(resp));
-
-            },
-            error: function (err) { console.log(err) },
-            complete: function(resp){
-
-            }
+            data: {email: email, password: password, recaptchaResponse: recaptchaResponse}
 
 
         })
 
             .then(function(resp){
                 conslog.log(resp);
-                dispatch(Register_Succeed_Action(resp));
+                dispatch(Register_Succeed_Action());
 
             })
             .fail(function(err, msg){
@@ -78,7 +81,9 @@ export const Register_Action = (email, password, recaptchaResponse) => {
             .always(function(resp){
                 //dispatch(Close_Spinner());
             });
-            */
+ */
+
+
     }
 }
 
@@ -88,10 +93,10 @@ export const Register_Succeed_Action = () => {
     }
 }
 
-export const Register_Fail_Action = (message) => {
-    console.log(message);
+export const Register_Fail_Action = (ex) => {
+
     return {
         type: 'Register_Fail',
-        message: message
+        message: ex.message
     }
 }

@@ -36,13 +36,13 @@ describe('new user registration', () => {
     it('register-successfully', () => {
         nock('http://localhost:8090')
             .post('/user/registration')
-            .reply(201, { });
+            .reply(201, { message: 'good job' });
 
         const expectedActions = [
 
             {type: 'OPEN_SPINNER'},
-            { type: 'Register_Succeed' },
-            {type: 'CLOSE_SPINNER'}
+            {type: 'CLOSE_SPINNER'},
+            { type: 'Register_Succeed' }
 
         ];
 
@@ -54,16 +54,19 @@ describe('new user registration', () => {
         })
     });
 
+
+
     it('register-email exists', () => {
         nock('http://localhost:8090')
             .post('/user/registration')
-            .reply(400, { code: '1047', message: 'email address exists' });
+            .reply(400, {message: 'email address exists'} );
 
         const expectedActions = [
 
             {type: 'OPEN_SPINNER'},
-            { type: 'Register_Succeed' },
-            {type: 'CLOSE_SPINNER'}
+            {type: 'CLOSE_SPINNER'},
+            { type: 'Register_Fail', message: 'email address exists' }
+
 
         ];
 
