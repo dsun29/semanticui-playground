@@ -22,8 +22,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-const RegisterContainer = connect(mapStateToProps, mapDispatchToProps)(RegisterComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterComponent);
 
 
-export default RegisterContainer
 
