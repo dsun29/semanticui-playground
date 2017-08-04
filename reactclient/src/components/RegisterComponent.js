@@ -14,6 +14,8 @@ export default class RegisterComponent extends Component {
     constructor(props) {
         super(props);
 
+        this.props = props;
+
         this.state = {
 
         }
@@ -30,35 +32,45 @@ export default class RegisterComponent extends Component {
         this.setState({passwordErrorMsg: null})
         this.setState({password2ErrorMsg: null})
 
+        var foundError = false;
         var email = this.state.email;
         if(email === undefined || email === null || email.length < 1){
-            this.setState({emailErrorMsg: 'Email address is required'})
+            this.setState({emailErrorMsg: 'Email address is required'});
+            foundError = true;
         }
         else{
             var re = /^\w+@[0-9a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
             if(re.test(email) === false){
-                this.setState({emailErrorMsg: 'Invalid email address'})
+                this.setState({emailErrorMsg: 'Invalid email address'});
+                foundError = true;
             }
         }
 
         var password = this.state.password;
         if(password === undefined || password === null || password.length < 10){
-            this.setState({passwordErrorMsg: 'Password is required with minimum of 10 characters'})
+            this.setState({passwordErrorMsg: 'Password is required with minimum of 10 characters'});
+            foundError = true;
         }
         else if(password.length > 24){
-            this.setState({passwordErrorMsg: 'Password can contain no more than 24 characters'})
+            this.setState({passwordErrorMsg: 'Password can contain no more than 24 characters'});
+            foundError = true;
         }
 
         var password2 = this.state.password2;
         if(password2 === undefined || password2 === null){
-            this.setState({password2ErrorMsg: 'Password is required'})
+            this.setState({password2ErrorMsg: 'Password is required'});
+            foundError = true;
         }
         else if (password2 !== password) {
-            this.setState({password2ErrorMsg: 'Two passwords must much each other'})
+            this.setState({password2ErrorMsg: 'Two passwords must much each other'});
+            foundError = true;
         }
 
-        if (this.state.emailErrorMsg === null && this.state.passwordErrorMsg === null && this.state.password2ErrorMsg === null) {
-            //submit
+
+        //this does not work with enzemy. Why?
+        //if (this.state.emailErrorMsg === null && this.state.passwordErrorMsg === null && this.state.password2ErrorMsg === null) {
+        if(foundError === false){
+            this.props.register(email, password, null);
         }
 
     }

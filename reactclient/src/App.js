@@ -2,17 +2,14 @@ import React, { Component } from 'react';
 
 import './App.css';
 import { Container, Grid } from 'semantic-ui-react'
-import TopHeaderComponent from './components/TopHeaderComponent'
-import MainMenuComponent from './components/MainMenuComponent'
-import LoginComponent from './components/LoginComponent'
+
+import RegisterContainer from './containers/RegisterContainer'
 
 class App extends Component {
   render() {
     return (
 
-            <LoginComponent/>
-
-
+            <RegisterContainer/>
     );
   }
 }
