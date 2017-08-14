@@ -60,7 +60,8 @@ export const Register_Action = (email, password, recaptchaResponse) => {
 
 export const Register_Succeed_Action = () => {
     return {
-        type: 'Register_Succeed'
+        type: 'Register_Succeed',
+        registeredSuccessfully: true
     }
 }
 
@@ -68,6 +69,7 @@ export const Register_Fail_Action = (ex) => {
 
     return {
         type: 'Register_Fail',
+        registeredSuccessfully: false,
         message: ex.message
     }
 }

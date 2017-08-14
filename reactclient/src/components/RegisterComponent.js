@@ -21,6 +21,8 @@ export default class RegisterComponent extends Component {
         }
 
         this.validate = this.validate.bind(this);
+        this.renderForm = this.renderForm.bind(this);
+        this.renderSuccessMessage = this.renderSuccessMessage.bind(this);
     }
 
     validate(e) {
@@ -75,6 +77,78 @@ export default class RegisterComponent extends Component {
 
     }
 
+    renderForm() {
+        return (
+            <Grid.Column style={{ maxWidth: 550 }}>
+                <Container textAlign="left">
+                    <Divider hidden/>
+                    <Header as="h2">Register</Header>
+
+
+
+                    <Form size="large" onSubmit={(e) => this.validate(e)}>
+                        <Segment stacked secondary>
+                            <Form.Field>
+                                <label>Email Address</label>
+                                <Input placeholder='Email address' error={this.state.emailErrorMsg ? true : false} icon="at" iconPosition="left" type="email"
+                                       onChange={e => this.setState({email: e.target.value})}
+                                />
+                                {
+                                    this.state.emailErrorMsg ? (<Label basic color='red' pointing>{this.state.emailErrorMsg}</Label>) : null
+                                }
+
+                            </Form.Field>
+                            <Form.Field>
+                                <label>Password</label>
+                                <Input placeholder='Password' icon="lock" error={this.state.passwordErrorMsg ? true : false} iconPosition="left" type="password"
+                                       onChange={e => this.setState({password: e.target.value})}
+                                />
+                                {
+                                    this.state.passwordErrorMsg ? (<Label basic color='red' pointing>{this.state.passwordErrorMsg}</Label>) : null
+                                }
+
+                            </Form.Field>
+                            <Form.Field>
+                                <label>Confirm password</label>
+                                <Input placeholder='Confirm password' error={this.state.password2ErrorMsg ? true : false} icon="lock" iconPosition="left" type="password"
+                                       onChange={e => this.setState({password2: e.target.value})}
+                                />
+                                {
+                                    this.state.password2ErrorMsg ? (<Label basic color='red' pointing>{this.state.password2ErrorMsg}</Label>) : null
+                                }
+
+                            </Form.Field>
+
+                            <Button type='submit' fluid color="teal">Submit</Button>
+
+                        </Segment>
+                    </Form>
+
+                    <Message>
+                        Already registered? <a href="/">Log In</a>
+                    </Message>
+
+                </Container>
+
+            </Grid.Column>
+        )
+    }
+
+    renderSuccessMessage() {
+        return(
+            <Container>
+                <Divider/>
+                <Message
+                    success
+                    icon="checkmark"
+                    size='large'
+                    header='Your user registration was successful'
+                    content='You may now log-in with the username you have chosen'
+                />
+            </Container>
+        )
+    }
+
     render() {
 
 
@@ -83,56 +157,9 @@ export default class RegisterComponent extends Component {
             <Layout>
 
                 <Grid textAlign="center">
-                    <Grid.Column style={{ maxWidth: 550 }}>
-                        <Container textAlign="left">
-                            <Divider hidden/>
-                            <Header as="h2">Register</Header>
-
-                            <Form size="large" onSubmit={(e) => this.validate(e)}>
-                                <Segment stacked secondary>
-                                    <Form.Field>
-                                        <label>Email Address</label>
-                                        <Input placeholder='Email address' error={this.state.emailErrorMsg ? true : false} icon="at" iconPosition="left" type="email"
-                                            onChange={e => this.setState({email: e.target.value})}
-                                        />
-                                        {
-                                            this.state.emailErrorMsg ? (<Label basic color='red' pointing>{this.state.emailErrorMsg}</Label>) : null
-                                        }
-
-                                    </Form.Field>
-                                    <Form.Field>
-                                        <label>Password</label>
-                                        <Input placeholder='Password' icon="lock" error={this.state.passwordErrorMsg ? true : false} iconPosition="left" type="password"
-                                               onChange={e => this.setState({password: e.target.value})}
-                                        />
-                                        {
-                                            this.state.passwordErrorMsg ? (<Label basic color='red' pointing>{this.state.passwordErrorMsg}</Label>) : null
-                                        }
-
-                                    </Form.Field>
-                                    <Form.Field>
-                                        <label>Confirm password</label>
-                                        <Input placeholder='Confirm password' error={this.state.password2ErrorMsg ? true : false} icon="lock" iconPosition="left" type="password"
-                                               onChange={e => this.setState({password2: e.target.value})}
-                                        />
-                                        {
-                                            this.state.password2ErrorMsg ? (<Label basic color='red' pointing>{this.state.password2ErrorMsg}</Label>) : null
-                                        }
-
-                                    </Form.Field>
-
-                                    <Button type='submit' fluid color="teal">Submit</Button>
-
-                                </Segment>
-                            </Form>
-
-                            <Message>
-                                Already registered? <a href="/">Log In</a>
-                            </Message>
-
-                        </Container>
-
-                    </Grid.Column>
+                    {
+                        this.props.registeredSuccessfully ? this.renderSuccessMessage() : this.renderForm()
+                    }
                 </Grid>
             </Layout>
 

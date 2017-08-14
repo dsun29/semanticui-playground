@@ -7,7 +7,7 @@ import { Register_Action } from '../redux/actions'
 
 const mapStateToProps = (state) =>{
     return {
-        showMessageBox: state.showMessageBox
+        registeredSuccessfully: true
     }
 }
 

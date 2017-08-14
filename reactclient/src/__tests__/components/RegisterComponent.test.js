@@ -135,4 +135,17 @@ describe('Registeromponent', () => {
     });
 
 
+    it('should display success message', () => {
+        const props = {
+            register: jest.fn(),
+            registeredSuccessfully: true
+        }
+
+        const enzymeWrapper = mount(<RegisterComponent {...props} />)
+
+        expect(enzymeWrapper.find('Message').length).toBe(1);
+
+    });
+
+
 })
