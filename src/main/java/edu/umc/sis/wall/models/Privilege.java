@@ -5,40 +5,33 @@ package edu.umc.sis.wall.models;
  *
  * @author $(USER)
  * @see <a href="git.olemiss.edu">git.olemiss.edu</a>
- * @since 8/16/17
+ * @since 8/17/17
  */
-
 import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 @Entity
-public class Role {
+public class Privilege {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToMany(mappedBy = "roles")
-    private Collection<SisUser> users;
-
-    @ManyToMany
-    @JoinTable(name = "roles_privileges", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
-    private Collection<Privilege> privileges;
-
     private String name;
 
-    public Role() {
+    @ManyToMany(mappedBy = "privileges")
+    private Collection<Role> roles;
+
+    public Privilege() {
         super();
     }
 
-    public Role(final String name) {
+    public Privilege(final String name) {
         super();
         this.name = name;
     }
@@ -61,20 +54,12 @@ public class Role {
         this.name = name;
     }
 
-    public Collection<SisUser> getUsers() {
-        return users;
+    public Collection<Role> getRoles() {
+        return roles;
     }
 
-    public void setUsers(final Collection<SisUser> users) {
-        this.users = users;
-    }
-
-    public Collection<Privilege> getPrivileges() {
-        return privileges;
-    }
-
-    public void setPrivileges(final Collection<Privilege> privileges) {
-        this.privileges = privileges;
+    public void setRoles(final Collection<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
@@ -86,27 +71,26 @@ public class Role {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
+    public boolean equals(Object obj) {
+        if (this == obj)
             return true;
-        }
-        if (obj == null) {
+        if (obj == null)
             return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass())
             return false;
-        }
-        final Role role = (Role) obj;
-        if (!role.equals(role.name)) {
+        Privilege other = (Privilege) obj;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
             return false;
-        }
         return true;
     }
 
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("Role [name=").append(name).append("]").append("[id=").append(id).append("]");
+        builder.append("Privilege [name=").append(name).append("]").append("[id=").append(id).append("]");
         return builder.toString();
     }
 }

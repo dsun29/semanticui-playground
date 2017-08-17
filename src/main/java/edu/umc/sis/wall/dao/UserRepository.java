@@ -11,7 +11,9 @@ package edu.umc.sis.wall.dao;
 
 import edu.umc.sis.wall.models.SisUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UserRepository extends JpaRepository<SisUser, Long> {
     SisUser findByUsername(String username);
 

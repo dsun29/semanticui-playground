@@ -26,6 +26,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 /**
@@ -46,6 +47,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     /**
      * Login, Logout, Success, and Access Denied beans/handlers
@@ -91,42 +95,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(restAuthenticationEntryPoint)
+                .and()
                 .authorizeRequests()
-                .antMatchers("/", "/index", "/authenticate")
-                .permitAll()
-                .antMatchers("/secured/**/**",
-                        "/secured/success", "/secured/socket", "/secured/success")
-                .authenticated()
-                .anyRequest().authenticated()
+                .antMatchers("/api/foos").authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login").permitAll()
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .loginProcessingUrl("/authenticate")
                 .successHandler(loginSuccessHandler())
-                .failureUrl("/denied").permitAll()
+                .failureHandler(new SimpleUrlAuthenticationFailureHandler())
                 .and()
-                .logout()
-                .logoutSuccessHandler(logoutSuccessHandler())
-                .and()
-                /**
-                 * Applies to User Roles - not to login failures or unauthenticated access attempts.
-                 */
-                .exceptionHandling()
-                .accessDeniedHandler(accessDeniedHandler())
-                .and()
-                .authenticationProvider(authenticationProvider());
+                .logout();
 
-        /** Disabled for local testing */
-        http
-                .csrf().disable();
 
-        /** This is solely required to support H2 console viewing in Spring MVC with Spring Security */
-        http
-                .headers()
-                .frameOptions()
-                .disable();
     }
 
     @Override
@@ -138,5 +120,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/resources/**");
     }
+
+
 
 }

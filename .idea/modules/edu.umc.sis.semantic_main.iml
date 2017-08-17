@@ -21,7 +21,6 @@
     <orderEntry type="library" name="Gradle: javax.transaction:javax.transaction-api:1.2" level="project" />
     <orderEntry type="library" name="Gradle: org.passay:passay:1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava:22.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.jboss.aerogear:aerogear-otp-java:1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: javax.mail:mail:1.4.7" level="project" />
     <orderEntry type="library" name="Gradle: org.thymeleaf.extras:thymeleaf-extras-springsecurity4:2.1.3.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: javax.el:el-api:2.2" level="project" />

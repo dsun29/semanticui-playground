@@ -37,15 +37,15 @@ dependencies {
     compile("org.hibernate:hibernate-validator")
 
 
-    compile("mysql:mysql-connector-java")
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
     compile("commons-dbcp:commons-dbcp")
     compile group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2'
-    compile("commons-dbcp:commons-dbcp")
+
 
     compile group: 'org.passay', name: 'passay', version: '1.0'
     compile group: 'com.google.guava', name: 'guava', version: '22.0'
 
-    compile group: 'org.jboss.aerogear', name: 'aerogear-otp-java', version: '1.0.0'
+
 
     compile group: 'javax.mail', name: 'mail', version: '1.4.7'
     compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4")
