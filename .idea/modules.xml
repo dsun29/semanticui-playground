@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/edu.umc.sis.semantic.iml" filepath="$PROJECT_DIR$/.idea/modules/edu.umc.sis.semantic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/edu.umc.sis.semantic_main.iml" filepath="$PROJECT_DIR$/.idea/modules/edu.umc.sis.semantic_main.iml" group="edu.umc.sis.semantic" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/edu.umc.sis.semantic_test.iml" filepath="$PROJECT_DIR$/.idea/modules/edu.umc.sis.semantic_test.iml" group="edu.umc.sis.semantic" />
+    </modules>
+  </component>
+</project>

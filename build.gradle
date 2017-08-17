@@ -1,15 +1,60 @@
 group 'edu.umc.sis.semantic'
-version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
+    }
+}
 
 apply plugin: 'java'
-apply plugin: 'war'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
 
-sourceCompatibility = 1.5
+jar {
+    baseName = 'gs-securing-web'
+    version =  '0.1.0'
+}
 
 repositories {
     mavenCentral()
 }
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.boot:spring-boot-starter-mail")
+    compile ("org.springframework.data:spring-data-jpa")
+    compile("org.hibernate:hibernate-entitymanager")
+    compile("org.hibernate:hibernate-validator")
+
+
+    compile("mysql:mysql-connector-java")
+    compile("commons-dbcp:commons-dbcp")
+    compile group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2'
+    compile("commons-dbcp:commons-dbcp")
+
+    compile group: 'org.passay', name: 'passay', version: '1.0'
+    compile group: 'com.google.guava', name: 'guava', version: '22.0'
+
+    compile group: 'org.jboss.aerogear', name: 'aerogear-otp-java', version: '1.0.0'
+
+    compile group: 'javax.mail', name: 'mail', version: '1.4.7'
+    compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4")
+
+    compile group: 'javax.el', name: 'el-api', version: '2.2'
+    compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.9'
+
+    testCompile("junit:junit")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("org.springframework.security:spring-security-test")
+
 }
