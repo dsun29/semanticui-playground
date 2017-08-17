@@ -9,12 +9,23 @@ package edu.umc.sis.wall;
  */
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @SpringBootApplication
 public class Application {
 
     public static void main(String[] args) throws Throwable {
         SpringApplication.run(Application.class, args);
+    }
+
+    @Bean
+    public ReloadableResourceBundleMessageSource messageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename("classpath:messages.properties");
+        messageSource.setCacheSeconds(36000);
+
+        return messageSource;
     }
 
 }
