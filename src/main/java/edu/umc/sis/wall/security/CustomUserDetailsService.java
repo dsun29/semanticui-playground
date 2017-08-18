@@ -39,8 +39,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            SisUser user = userRepository.findByUsername(username);
-            if (user != null) return new User(user.getUsername(), user.getPassword(), getAuthorities(user));
+            SisUser user = userRepository.findByEmail(username);
+            if (user != null) return new User(user.getEmail(), user.getPassword(), getAuthorities(user));
         }
         catch (Exception ex) {
             log.error("Exception in CustomUserDetailsService: " + ex);
@@ -51,7 +51,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private Collection<GrantedAuthority> getAuthorities(SisUser user) {
         Collection<GrantedAuthority> authorities = new HashSet<>();
         for (Role role : user.getRoles()) {
-            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getRole());
+            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getName());
             authorities.add(grantedAuthority);
         }
         return authorities;

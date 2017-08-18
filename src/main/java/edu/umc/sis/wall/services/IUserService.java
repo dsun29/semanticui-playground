@@ -15,7 +15,7 @@ import java.io.UnsupportedEncodingException;
 
 public interface IUserService {
 
-    SisUser registerNewUserAccount(String email, String password) throws UserAlreadyExistException;
+    SisUser registerNewUserAccount(String email, String password, String ip) throws Exception;
 
     SisUser getUser(String verificationToken);
 

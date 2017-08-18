@@ -10,25 +10,23 @@ package edu.umc.sis.wall.controllers;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 
+import edu.umc.sis.wall.controllers.util.GenericResponse;
+import edu.umc.sis.wall.controllers.util.UserInputValidator;
 import edu.umc.sis.wall.models.SisUser;
+import edu.umc.sis.wall.models.VerificationToken;
 import edu.umc.sis.wall.services.IUserService;
 import edu.umc.sis.wall.services.MessageByLocaleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,11 +41,6 @@ public class RegistrationController {
     @Autowired
     private IUserService userService;
 
-    @Autowired
-    private ISecurityUserService securityUserService;
-
-    @Autowired
-    private ICaptchaService captchaService;
 
     @Autowired
     MessageByLocaleService messageByLocaleService;
@@ -70,30 +63,45 @@ public class RegistrationController {
     // Registration
     @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
     @ResponseBody
-    public GenericResponse registerUserAccount(final HttpServletRequest request) {
+    public GenericResponse registerUserAccount(final HttpServletRequest request) throws IllegalArgumentException, Exception{
+        String email = request.getParameter("username");
+        String password = request.getParameter("password");
+        String ip = request.getRemoteAddr();
+
+        if (email == null || password == null){
+            throw new IllegalArgumentException(messageByLocaleService.getMessage("parameter.missing"));
+        }
+
+        UserInputValidator validator = new UserInputValidator();
 
 
+        if (!validator.isValidEmail(email)){
+            throw new IllegalArgumentException(messageByLocaleService.getMessage("email.invalid"));
+        }
+        if (!validator.isValidPassword(password)){
+            throw new IllegalArgumentException(messageByLocaleService.getMessage("password.invalid"));
+        }
 
-        final SisUser registered = userService.registerNewUserAccount(request.getParameter("username"));
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
-        return new GenericResponse(messageByLocaleService.getMessage("user.login.success"));
+        final SisUser registered = userService.registerNewUserAccount(email, password, ip);
+        //eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
+        return new GenericResponse(messageByLocaleService.getMessage("user.register.success"));
     }
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
     public String confirmRegistration(final Locale locale, final Model model, @RequestParam("token") final String token) throws UnsupportedEncodingException {
         final String result = userService.validateVerificationToken(token);
         if (result.equals("valid")) {
-            final User user = userService.getUser(token);
+            final SisUser user = userService.getUser(token);
             System.out.println(user);
             if (user.isUsing2FA()) {
                 model.addAttribute("qr", userService.generateQRUrl(user));
                 return "redirect:/qrcode.html?lang=" + locale.getLanguage();
             }
-            model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));
+            model.addAttribute("message", messageByLocaleService.getMessage("message.accountVerified"));
             return "redirect:/login?lang=" + locale.getLanguage();
         }
 
-        model.addAttribute("message", messages.getMessage("auth.message." + result, null, locale));
+        model.addAttribute("message", messageByLocaleService.getMessage("auth.message."));
         model.addAttribute("expired", "expired".equals(result));
         model.addAttribute("token", token);
         return "redirect:/badUser.html?lang=" + locale.getLanguage();
@@ -103,19 +111,19 @@ public class RegistrationController {
 
     // ============== NON-API ============
 
-    private SimpleMailMessage constructResendVerificationTokenEmail(final String contextPath, final Locale locale, final VerificationToken newToken, final User user) {
+    private SimpleMailMessage constructResendVerificationTokenEmail(final String contextPath, final Locale locale, final VerificationToken newToken, final SisUser user) {
         final String confirmationUrl = contextPath + "/registrationConfirm.html?token=" + newToken.getToken();
-        final String message = messages.getMessage("message.resendToken", null, locale);
+        final String message = messageByLocaleService.getMessage("message.resendToken");
         return constructEmail("Resend Registration Token", message + " \r\n" + confirmationUrl, user);
     }
 
-    private SimpleMailMessage constructResetTokenEmail(final String contextPath, final Locale locale, final String token, final User user) {
+    private SimpleMailMessage constructResetTokenEmail(final String contextPath, final Locale locale, final String token, final SisUser user) {
         final String url = contextPath + "/user/changePassword?id=" + user.getId() + "&token=" + token;
-        final String message = messages.getMessage("message.resetPassword", null, locale);
+        final String message = messageByLocaleService.getMessage("message.resetPassword");
         return constructEmail("Reset Password", message + " \r\n" + url, user);
     }
 
-    private SimpleMailMessage constructEmail(String subject, String body, User user) {
+    private SimpleMailMessage constructEmail(String subject, String body, SisUser user) {
         final SimpleMailMessage email = new SimpleMailMessage();
         email.setSubject(subject);
         email.setText(body);

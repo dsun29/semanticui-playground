@@ -17,7 +17,11 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 
+import edu.umc.sis.wall.dao.PasswordResetTokenRepository;
+import edu.umc.sis.wall.dao.RoleRepository;
 import edu.umc.sis.wall.dao.UserRepository;
+import edu.umc.sis.wall.dao.VerificationTokenRepository;
+import edu.umc.sis.wall.models.PasswordResetToken;
 import edu.umc.sis.wall.models.SisUser;
 import edu.umc.sis.wall.models.VerificationToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.apache.commons.text.RandomStringGenerator;
+
 
 @Service
 @Transactional
@@ -56,17 +62,24 @@ public class SisUserService implements IUserService {
     // API
 
     @Override
-    public SisUser registerNewUserAccount(String email, String password, String clientIP) {
+    public SisUser registerNewUserAccount(String email, String password, String clientIP) throws  Exception {
         if (emailExist(email)) {
-            throw new UserAlreadyExistException("There is an account with that email adress: " + email);
+            throw new Exception("There is an account with that email adress: " + email);
         }
         final SisUser user = new SisUser();
 
-        user.setFirstName(accountDto.getFirstName());
-        user.setLastName(accountDto.getLastName());
-        user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
-        user.setEmail(accountDto.getEmail());
-        user.setUsing2FA(accountDto.isUsing2FA());
+
+        user.setPassword(passwordEncoder.encode(password));
+        user.setEmail(email);
+
+        //generate secret
+        RandomStringGenerator generator = new RandomStringGenerator.Builder()
+                .withinRange('a', 'z').build();
+        String randomLetters = generator.generate(20);
+
+        user.setSecret(randomLetters);
+
+        user.setUsing2FA(false);
         user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
         return repository.save(user);
     }
@@ -86,12 +99,12 @@ public class SisUserService implements IUserService {
     }
 
     @Override
-    public void saveRegisteredUser(final User user) {
+    public void saveRegisteredUser(final SisUser user) {
         repository.save(user);
     }
 
     @Override
-    public void deleteUser(final User user) {
+    public void deleteUser(final SisUser user) {
         final VerificationToken verificationToken = tokenRepository.findByUser(user);
 
         if (verificationToken != null) {
@@ -108,7 +121,7 @@ public class SisUserService implements IUserService {
     }
 
     @Override
-    public void createVerificationTokenForUser(final User user, final String token) {
+    public void createVerificationTokenForUser(final SisUser user, final String token) {
         final VerificationToken myToken = new VerificationToken(token, user);
         tokenRepository.save(myToken);
     }
@@ -122,7 +135,7 @@ public class SisUserService implements IUserService {
     }
 
     @Override
-    public void createPasswordResetTokenForUser(final User user, final String token) {
+    public void createPasswordResetTokenForUser(final SisUser user, final String token) {
         final PasswordResetToken myToken = new PasswordResetToken(token, user);
         passwordTokenRepository.save(myToken);
     }

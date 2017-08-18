@@ -8,6 +8,9 @@ package edu.umc.sis.wall.models;
  * @since 8/16/17
  */
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -34,9 +37,13 @@ public class SisUser {
 
     private String lastName;
 
+    @Column(nullable = false)
+    @Email
+    @NotBlank
     private String email;
 
-    @Column(length = 60)
+    @Column(length = 60, nullable = false)
+    @NotBlank
     private String password;
 
     private boolean enabled;
@@ -53,7 +60,6 @@ public class SisUser {
 
     public SisUser() {
         super();
-        this.secret = "bacdem____pmoiuyt";
         this.enabled = false;
     }
 
