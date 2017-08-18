@@ -207,7 +207,8 @@ public class SisUserService implements IUserService {
         return currentUser;
     }
 
-    private boolean emailExist(final String email) {
+    @Override
+    public boolean emailExist(final String email) {
         final SisUser user = repository.findByEmail(email);
         if (user != null) {
             return true;

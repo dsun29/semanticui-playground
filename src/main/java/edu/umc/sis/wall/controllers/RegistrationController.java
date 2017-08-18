@@ -19,7 +19,7 @@ import edu.umc.sis.wall.controllers.util.UserInputValidator;
 import edu.umc.sis.wall.models.SisUser;
 import edu.umc.sis.wall.models.VerificationToken;
 import edu.umc.sis.wall.services.IUserService;
-import edu.umc.sis.wall.services.MessageByLocaleService;
+import edu.umc.sis.wall.services.IMessageByLocaleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class RegistrationController {
 
 
     @Autowired
-    MessageByLocaleService messageByLocaleService;
+    IMessageByLocaleService messageByLocaleService;
 
 
 
@@ -80,6 +80,11 @@ public class RegistrationController {
         }
         if (!validator.isValidPassword(password)){
             throw new IllegalArgumentException(messageByLocaleService.getMessage("password.invalid"));
+        }
+
+        //check if email exists already
+        if(userService.emailExist(email)){
+            throw new IllegalArgumentException(messageByLocaleService.getMessageWithParameter("user.register.email.exists", email));
         }
 
         final SisUser registered = userService.registerNewUserAccount(email, password, ip);

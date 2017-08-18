@@ -48,5 +48,6 @@ public interface IUserService {
     String generateQRUrl(SisUser user) throws UnsupportedEncodingException;
 
     SisUser updateUser2FA(boolean use2FA);
+    boolean emailExist(String email);
 
 }
