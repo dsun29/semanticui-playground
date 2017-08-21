@@ -25,16 +25,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 public class RegistrationController {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
@@ -61,12 +59,17 @@ public class RegistrationController {
     }
 
     // Registration
-    @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/registration", method = RequestMethod.POST,
+                    consumes = MediaType.APPLICATION_JSON_VALUE,
+                    produces= MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public GenericResponse registerUserAccount(final HttpServletRequest request) throws IllegalArgumentException, Exception{
-        String email = request.getParameter("username");
-        String password = request.getParameter("password");
+    public GenericResponse registerUserAccount(@RequestBody SisUser user, final HttpServletRequest request) throws IllegalArgumentException, Exception{
+        //String email = request.getParameter("email");
+        //String password = request.getParameter("password");
         String ip = request.getRemoteAddr();
+
+        String email = user.getEmail();
+        String password = user.getPassword();
 
         if (email == null || password == null){
             throw new IllegalArgumentException(messageByLocaleService.getMessage("parameter.missing"));
