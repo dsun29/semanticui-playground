@@ -117,7 +117,8 @@ public class RegistrationControllerTest {
                 .andExpect(jsonPath("$.message", is(messageByLocaleService.getMessage("password.invalid"))));
     }
 
-
+ls
+    
     @Test
     public void registerSuccessful() throws Exception {
 
