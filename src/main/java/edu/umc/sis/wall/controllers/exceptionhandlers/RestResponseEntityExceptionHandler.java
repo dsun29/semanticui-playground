@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Guitar Model Object.
  *
@@ -29,22 +32,36 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class })
     public ResponseEntity<Object> handleBadParameter(RuntimeException ex, WebRequest request) {
-        return new ResponseEntity<Object>(
-                ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+
+        Map<String,String> result = new HashMap<String,String>();
+        result.put("message", ex.getMessage());
+        result.put("error", ex.getLocalizedMessage());
+
+        return new ResponseEntity<>(
+               result, HttpStatus.BAD_REQUEST);
 
     }
 
     @ExceptionHandler(value = { RuntimeException.class })
     public ResponseEntity<Object> handleRuntime(RuntimeException ex, WebRequest request) {
-        return new ResponseEntity<Object>(
-                ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        Map<String,String> result = new HashMap<String,String>();
+        result.put("message", ex.getMessage());
+        result.put("error", ex.getLocalizedMessage());
+
+        return new ResponseEntity<>(
+                result, HttpStatus.INTERNAL_SERVER_ERROR);
+
 
     }
 
     @ExceptionHandler(value = { Exception.class })
     public ResponseEntity<Object> handleUnknown(RuntimeException ex, WebRequest request) {
-        return new ResponseEntity<Object>(
-                ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        Map<String,String> result = new HashMap<String,String>();
+        result.put("message", ex.getMessage());
+        result.put("error", ex.getLocalizedMessage());
+
+        return new ResponseEntity<>(
+                result, HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
 
