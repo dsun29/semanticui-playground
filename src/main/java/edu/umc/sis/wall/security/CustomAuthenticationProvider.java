@@ -20,8 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
-//@Component
 public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
 
     @Autowired
@@ -37,10 +37,10 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
         UserDetails u = null;
-        return new UsernamePasswordAuthenticationToken("bac", "9999", null);
+        //return new UsernamePasswordAuthenticationToken("bac", "9999", null);
 
+        System.out.println(name + "<>"  + password);
 
-        /*
         try {
             u = getUserDetailsService().loadUserByUsername(name);
         } catch (UsernameNotFoundException ex) {
@@ -50,13 +50,14 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
         }
 
         if (u != null) {
+            System.out.println(name + "<>"  + u.getPassword());
             if (u.getPassword().equals(password)) {
                 return new UsernamePasswordAuthenticationToken(u, password, u.getAuthorities());
             }
         }
 
         throw new BadCredentialsException(messages.getMessage("CustomDaoAuthenticationProvider.badCredentials", "Bad credentials"));
-*/
+
     }
 
 

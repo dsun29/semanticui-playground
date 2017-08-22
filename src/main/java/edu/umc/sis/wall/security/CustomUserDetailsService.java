@@ -41,11 +41,15 @@ public class CustomUserDetailsService implements UserDetailsService {
         try {
             SisUser user = userRepository.findByEmail(username);
             if (user != null) return new User(user.getEmail(), user.getPassword(), getAuthorities(user));
+            else{
+                throw new UsernameNotFoundException(username + " not found");
+            }
         }
         catch (Exception ex) {
             log.error("Exception in CustomUserDetailsService: " + ex);
+            throw ex;
         }
-        return null;
+
     }
 
     private Collection<GrantedAuthority> getAuthorities(SisUser user) {

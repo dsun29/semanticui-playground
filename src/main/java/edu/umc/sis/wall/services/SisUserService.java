@@ -25,6 +25,7 @@ import edu.umc.sis.wall.models.PasswordResetToken;
 import edu.umc.sis.wall.models.SisUser;
 import edu.umc.sis.wall.models.VerificationToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -59,12 +60,14 @@ public class SisUserService implements IUserService {
     public static String QR_PREFIX = "https://chart.googleapis.com/chart?chs=200x200&chld=M%%7C0&cht=qr&chl=";
     public static String APP_NAME = "SpringRegistration";
 
-    // API
+    @Autowired
+    IMessageByLocaleService messageByLocaleService;
+
 
     @Override
-    public SisUser registerNewUserAccount(String email, String password, String clientIP) throws  Exception {
+    public SisUser registerNewUserAccount(String email, String password, String clientIP) throws DuplicateKeyException {
         if (emailExist(email)) {
-            throw new Exception("There is an account with that email adress: " + email);
+            throw new DuplicateKeyException(messageByLocaleService.getMessageWithParameter("user.register.email.exists", email));
         }
         final SisUser user = new SisUser();
 
@@ -80,7 +83,7 @@ public class SisUserService implements IUserService {
         user.setSecret(randomLetters);
 
         user.setUsing2FA(false);
-        user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
+        user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_READER")));
         return repository.save(user);
     }
 

@@ -5,3 +5,4 @@ reactclient/node_modules
 gradlew
 gradlew.bat
 gradle
+npm-debug.log

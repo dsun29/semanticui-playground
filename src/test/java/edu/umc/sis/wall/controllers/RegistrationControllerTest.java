@@ -9,9 +9,12 @@ package edu.umc.sis.wall.controllers;
  */
 
 import edu.umc.sis.wall.Application;
+import edu.umc.sis.wall.dao.RoleRepository;
+import edu.umc.sis.wall.models.Role;
 import edu.umc.sis.wall.models.SisUser;
 import edu.umc.sis.wall.services.IMessageByLocaleService;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +63,8 @@ public class RegistrationControllerTest {
     @Autowired
     IMessageByLocaleService messageByLocaleService;
 
+    @Autowired
+    private RoleRepository roleRepository;
 
 
     @Autowired
@@ -78,6 +83,22 @@ public class RegistrationControllerTest {
     public void setup() throws Exception {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
 
+        //set up data in Roles table
+        Role role = new Role();
+        role.setName("ROLE_READER");
+        roleRepository.save(role);
+
+        Role role2 = new Role();
+        role2.setName("ROLE_PUBLISHER");
+        roleRepository.save(role2);
+
+        Role role3 = new Role();
+        role3.setName("ROLE_GUEST");
+        roleRepository.save(role3);
+
+        Role role4 = new Role();
+        role4.setName("ROLE_ROOT");
+        roleRepository.save(role4);
     }
 
 
@@ -117,8 +138,8 @@ public class RegistrationControllerTest {
                 .andExpect(jsonPath("$.message", is(messageByLocaleService.getMessage("password.invalid"))));
     }
 
-ls
-    
+
+
     @Test
     public void registerSuccessful() throws Exception {
 
@@ -127,7 +148,6 @@ ls
         user.setPassword("hBxf@1118");
         String userJson = json(user);
 
-        System.out.println(userJson);
 
         mockMvc.perform(post("/user/registration")
                 .contentType(contentType)
