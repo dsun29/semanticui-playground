@@ -43,8 +43,6 @@ public class RegistrationController {
     @Autowired
     IMessageByLocaleService messageByLocaleService;
 
-
-
     @Autowired
     private JavaMailSender mailSender;
 
